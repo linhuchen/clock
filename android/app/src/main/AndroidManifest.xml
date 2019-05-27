@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.clock">
+  package="com.clock_linxin_linhuhu">
 
     <uses-permission android:name="android.permission.INTERNET" />
 

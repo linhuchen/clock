@@ -102,7 +102,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.clock"
+        applicationId "com.clock_linxin_linhuhu"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

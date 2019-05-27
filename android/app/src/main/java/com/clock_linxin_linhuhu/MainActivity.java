@@ -1,4 +1,4 @@
-package com.clock;
+package com.clock_linxin_linhuhu;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
