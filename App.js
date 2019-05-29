@@ -1,69 +1,12 @@
-import * as React from 'react';
-import { View } from 'react-native';
-import {
-  createAppContainer,
-  createBottomTabNavigator,
-  createStackNavigator,
-} from 'react-navigation';
+import React, {Component} from 'react';
+import {View} from 'react-native';
+import Home from './components/Home';
 
-const ExampleScreen = View;
-
-const Clock = createStackNavigator(
-  {
-    Feed: ExampleScreen,
-    Profile: ExampleScreen,
-  },
-  {
-    defaultNavigationOptions: {
-      title: 'Clock',
-      headerTintColor: '#fff',
-      headerStyle: {
-        backgroundColor: '#000',
-      },
-    },
-    navigationOptions: {
-      tabBarLabel: 'Clock!',
-    },
+export default class App extends Component {
+  render() {
+    return (
+        <Home/>
+    );
   }
-);
+}
 
-const Plants = createStackNavigator(
-  {
-    Feed: ExampleScreen,
-    Profile: ExampleScreen,
-  },
-  {
-    defaultNavigationOptions: {
-      title: 'Plants',
-      headerTintColor: '#fff',
-      headerStyle: {
-        backgroundColor: '#000',
-      },
-    },
-    navigationOptions: {
-      tabBarLabel: 'Plants!',
-    },
-  }
-);
-
-const Settings = createStackNavigator(
-  {
-    Feed: ExampleScreen,
-    Profile: ExampleScreen,
-  },
-  {
-    defaultNavigationOptions: {
-      title: 'Settings',
-      headerTintColor: '#fff',
-      headerStyle: {
-        backgroundColor: '#000',
-      },
-    },
-    navigationOptions: {
-      tabBarLabel: 'Settings!',
-    },
-  }
-);
-
-const Tabs = createBottomTabNavigator({ Clock,Plants,Settings });
-export default createAppContainer(Tabs);
