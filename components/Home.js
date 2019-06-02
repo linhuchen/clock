@@ -6,6 +6,7 @@ import PlantsScreen from './Plants'
 import SettingsScreen from './Settings'
 
 
+
 const AppContainer = createMaterialBottomTabNavigator(
   {
   Clock:{screen: ClockScreen},
