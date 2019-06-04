@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
+import Stopwatch from './Stopwatch'
 
 const PlantsScreen =()=>(
-  <View/>
+  <Stopwatch/>
 )
 export default PlantsScreen
 
