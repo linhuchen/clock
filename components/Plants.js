@@ -9,9 +9,9 @@ const PlantsScreen =()=>(
 export default PlantsScreen
 
 PlantsScreen.navigationOptions={  
-  tabBarLabel:'Plants',
-  tabBarColor:'skyblue',
+  tabBarLabel:'Stopwatch',
+  tabBarColor:'black',
   tabBarIcon:({tintColor,focused})=>(
-    <Icon name='ios-rose' color={tintColor} size={focused ? 28:24}/>
+    <Icon name='ios-stopwatch' color={tintColor} size={focused ? 28:24}/>
   )  
 }

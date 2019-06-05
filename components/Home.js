@@ -1,10 +1,9 @@
 import React, {Component} from 'react'
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs'
-import {createAppContainer} from 'react-navigation'
 import ClockScreen from './Clock'
 import PlantsScreen from './Plants'
 import SettingsScreen from './Settings'
-
+import { createAppContainer, createStackNavigator } from 'react-navigation'
 
 
 const AppContainer = createMaterialBottomTabNavigator(

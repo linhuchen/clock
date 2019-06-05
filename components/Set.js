@@ -1,110 +1,275 @@
 import React, {Component} from 'react';
-import {View,Text,FlatList,Switch,StyleSheet,Dimensions,StatusBar,AsyncStorage} from 'react-native';
+import {View,Text,FlatList,Switch,StyleSheet,StatusBar,TouchableOpacity,Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
+import Storage from 'react-native-storage'
+import AsyncStorage from '@react-native-community/async-storage'
+import Swipeout from 'react-native-swipeout'
+import ref from './Imgcom'
 
+const url='https://api.seniverse.com/v3/weather/now.json?key=SZW94eRSbE270Oca2&location=beijing&language=en&unit=c'
 
+function Mapdays({days}){
+  return(
+    days.map(function(item){
+      if(item.value==true)
+      return (
+        <Text>{item.day}  </Text>
+      )
+    })
+  )
+}
+/*
+function Topbar({onPressOnOff,onPressadd}){
+  return(
+    <View>
+      <View style={styles.topbar}>
+        <View style={styles.topiconleft}>
+          <Icon name={'ios-bulb'} size={35} onPress={onPressOnOff}/>
+        </View>
+        <View>
+          <Text style={styles.title}>
+            Clock
+          </Text>
+        </View>
+        <View style={styles.topiconright}>
+          <Icon name={'ios-add'} size={35} onPress={onPressadd}/>
+        </View>
+      </View>
+    </View>
+  )
+}
+
+function Swi({on,onValueChange}){
+  return(
+    <Switch value={on} onValueChange={onValueChange}/>
+  )
+}
+*/
 export default class Setalarm extends Component{
+  static navigationOptions={
+    headerTitle:'Clock',
+    headerStyle:{backgroundColor:'silver'},
+    headerTitleStyle:{textAlign:'center',flex:1,fontSize:30}
+  }
+
   constructor(props){
     super(props)
     this.state={
-      alarm:[
-        {
-          id: 0,
-          time:{hour:12,min:12},
-          on:true,
-          days:[{day:'Mon',value:true},{day:'Tues',value:true},{day:'Wed',value:true},{day:'Thur',value:true},{day:'Fri',value:true},{day:'Sat',value:true},{day:'Sun',value:true}]
-        }
-      ],
-      flag:true
+      alarm:[],
+      data:[],
+      code:"",
+      tem:""
     }
     this.rendertimer=this.rendertimer.bind(this)
-    this.changestate=this.changestate.bind(this)
+    this.Turn_one=this.Turn_one.bind(this)
+    this.deletealarm=this.deletealarm.bind(this)
+    this.Addalarm=this.Addalarm.bind(this)
+    this.Turn_all=this.Turn_all.bind(this)
   }
 
-  onPressadd=()=>{
-    let newlist=this.state.alarm.map(function(item){return item})
+  componentWillMount() {this.readdata()}
+  componentDidUpdate(){this.savedata()}
+  componentDidMount(){
+    fetch(url)
+      .then(response=>response.json())
+      .then(data=>{
+        this.setState({
+          data:data.results[0]
+        })
+        this.setState({
+          code:this.state.data.now.code,
+          tem:this.state.data.now.temperature
+        })
+        //alert(this.state.data)
+      })
+      .catch(error=>alert(error))
+  }
+
+  savedata(){
+    let obj=this.state.alarm;
+    AsyncStorage.setItem('alarm',JSON.stringify(obj));
+  }
+
+  readdata= async()=>{
+    try{
+      let user = await AsyncStorage.getItem('alarm')
+      let parsed = JSON.parse(user)
+      this.setState({alarm:parsed})
+    }
+    catch (error) {
+      alert(error)
+    }
+  }
+
+  clear() {
+    AsyncStorage.clear(function(err){
+      if(!err){
+        this.setState({alarm:[]})
+        alert('存储的数据已清除完毕!')
+      }
+    })
+  }
+
+  Addalarm=()=>{
+    let newlist=[]
+    let h=new Date().getHours()
+    let m=new Date().getMinutes()
+    if(this.state.alarm!=null)
+      {newlist=this.state.alarm.map(function(item){return item})}
     let newalarm={
-      id:this.state.alarm.length,
-      time:{hour:0,min:0},
-      on:true,
-      days:[{day:'Mon',value:true},{day:'Tues',value:true},{day:'Wed',value:true},{day:'Thur',value:true},{day:'Fri',value:true},{day:'Sat',value:true},{day:'Sun',value:true}]}
+      id:newlist.length,
+      hour:h,
+      min:m,
+      on_of:true,
+      Mon:true,
+      Tues:true,
+      Wed:true,
+      Thur:true,
+      Fri:true,
+      Sat:true,
+      Sun:true,
+    }
     newlist.push(newalarm)
     this.setState({alarm:newlist})
-  }//添加闹钟组件
-
-  onPressOnOff=()=>{
-    let newlist=this.state.alarm.map(function(item){return item})
-    let num=0
-    for(let j=0;j<newlist.length;j++)
-      if(newlist[j].on)
-        num++
-    if(num==0)
+    this.savedata()
+  }
+  
+  Turn_all=()=>{
+    let len=this.state.alarm.length
+    if(len>0)
     {
-      for(let i=0;i<newlist.length;i++)
-      newlist[i].on=true
+      let newlist=this.state.alarm.map(function(item){return item})
+      let num=0
+      for(let j=0;j<newlist.length;j++)
+        if(newlist[j].on_of)
+          num++
+      if(num==0)
+      {
+        for(let i=0;i<newlist.length;i++)
+        newlist[i].on_of=true
+      }
+      else
+      {
+        for(let i=0;i<newlist.length;i++)
+        newlist[i].on_of=false
+      }
+      this.setState({alarm:newlist})
+      this.savedata()
     }
-    else
-    {
-      for(let i=0;i<newlist.length;i++)
-      newlist[i].on=false
-    }
-    this.setState({alarm:newlist})
-  }//全开全关组件
-
-  changestate(idc){
+  }
+  
+  
+  Turn_one(index){
     let newlist=this.state.alarm.map(function(item){return item})
-    newlist[idc].on=!newlist[idc].on
+    newlist[index].on_of=!newlist[index].on_of
     this.setState({alarm:newlist})
-  }//闹钟开关
+    this.savedata()
+    // alert(ref[a])
+  }
 
-  mapdays(days){
-    return(
-      days.map(function(item){
-        if(item.value==true)
-        return(
-          <Text>{item.day}  </Text>
-        )
-      })
-    )
+  deletealarm(index){
+    let newlist=this.state.alarm.map(function(item){return item})
+    newlist.splice(index,1)
+    for(let i=index;i<newlist.length;i++)
+      {
+        newlist[i].id=newlist[i].id-1
+      }
+    this.setState({alarm:newlist})
+    this.savedata()
   }
 
   rendertimer({item}){
+    const swipeouticon=[
+      {
+        text:'Delete',
+        onPress:()=>{
+          this.deletealarm(item.id)}}
+    ]
     return(
-      <View style={{flexDirection:'row',justifyContent:'space-between',marginHorizontal:15,}}>
-        
-        <View>
-          <Text style={{fontSize:40}}>{item.time.hour}{':'}{item.time.min}</Text>
-          <View style={{flexDirection:'row',justifyContent:'space-between',}}>{this.mapdays(item.days)}</View>
+      <Swipeout right={swipeouticon} autoClose={true}>
+        <View style={styles.item}>
+          <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Details',{alarm:item})}}>
+            <View>
+              <Text style={{fontSize:40}}>{item.hour<10 ? '0'+item.hour : item.hour}{':'}{item.min<10 ? '0'+item.min : item.min}</Text>
+            </View>
+            <View style={{flexDirection:'row'}}>
+              <Mapdays 
+                days={[
+                  {day:'Mon',value:item.Mon},
+                  {day:'Tues',value:item.Tues},
+                  {day:'Wed',value:item.Wed},
+                  {day:'Thur',value:item.Thur},
+                  {day:'Fri',value:item.Fri},
+                  {day:'Sat',value:item.Sat},
+                  {day:'Sun',value:item.Sun},
+                ]}
+              />
+            </View>
+          </TouchableOpacity>
+          <Switch value={item.on_of} onValueChange={()=>{this.Turn_one(item.id)}}/>
         </View>
-
-        <Switch value={item.on} onValueChange={()=>{this.changestate(item.id)}}/>
-      </View>)
-  }//返回列表元素
+      </Swipeout>
+    )
+  }
 
   render(){
     return(
-      <View>
-        <View style={{flexDirection:'row',justifyContent:'space-between',backgroundColor:'silver',height:50}}>
-          <View style={{justifyContent:'center',paddingLeft:12}}>
-            <Icon name={'ios-bulb'} size={35} onPress={this.onPressOnOff}/>
-          </View>
-          <View>
-            <Text style={{fontSize:35,justifyContent:'center'}}>
-              Clock
-            </Text>
-          </View>
-          <View style={{justifyContent:'center',paddingRight:12}}>
-            <Icon name={'ios-add'} size={35} onPress={this.onPressadd}/>
-          </View>
-        </View>
-        
+      <View style={{flex:1,backgroundColor:'silver'}}>
         <FlatList
           data={this.state.alarm}
           renderItem={this.rendertimer}
           keyExtractor={item => item.id}
         />
+        <View style={{justifyContent:'center',alignItems:'center'}}>
+          <Image source={ref['png'+this.state.code]}/>
+          <Icon name={'ios-body'} size={40} onPress={this.Addalarm}/>
+        </View>
       </View>
     )
   }
-}//返回整个页面
 
+}
+
+const styles=StyleSheet.create({
+  topbar:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    backgroundColor:'silver',
+    height:50
+  },
+  topiconleft:{
+    justifyContent:'center',
+    paddingLeft:12
+  },
+  topiconright:{
+    justifyContent:'center',
+    paddingRight:12
+  },
+  title:{
+    fontSize:35,
+    justifyContent:'center'
+  },
+  item:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    marginHorizontal:15,
+  }
+
+})
+
+/*
+{
+  "results":[
+    {
+      "location":
+        {"id":"WX4FBXXFKE4F",
+        "name":"Beijing",
+        "country":"CN",
+        "path":"Beijing,Beijing,China",
+        "timezone":"Asia/Shanghai",
+        "timezone_offset":"+08:00"},
+      "now":
+        {"text":"Cloudy",
+        "code":"4",
+        "temperature":"22"},
+      "last_update":"2019-06-04T23:25:08+08:00"}]}*/
