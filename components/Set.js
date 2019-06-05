@@ -1,24 +1,30 @@
 import React, {Component} from 'react';
-import {View,Text,FlatList,Switch,StyleSheet,StatusBar,TouchableOpacity,Image} from 'react-native';
+import {View,Text,FlatList,Switch,StyleSheet,StatusBar,TimePickerAndroid,Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
+import Icont from 'react-native-vector-icons/MaterialCommunityIcons'
 import Storage from 'react-native-storage'
 import AsyncStorage from '@react-native-community/async-storage'
 import Swipeout from 'react-native-swipeout'
 import ref from './Imgcom'
 
 const url='https://api.seniverse.com/v3/weather/now.json?key=SZW94eRSbE270Oca2&location=beijing&language=en&unit=c'
-
-function Mapdays({days}){
+/*
+function Mapdays({days,onPressicon}){
   return(
     days.map(function(item){
       if(item.value==true)
       return (
-        <Text>{item.day}  </Text>
+        <Icont 
+          name={'numeric-'+item.day} 
+          color={item.value ? '#ffdd59': '#1e272e'} 
+          size={30}
+          onPress={onPressicon}
+        />
       )
     })
   )
 }
-/*
+
 function Topbar({onPressOnOff,onPressadd}){
   return(
     <View>
@@ -65,6 +71,8 @@ export default class Setalarm extends Component{
     this.deletealarm=this.deletealarm.bind(this)
     this.Addalarm=this.Addalarm.bind(this)
     this.Turn_all=this.Turn_all.bind(this)
+    this.Turn_day=this.Turn_day.bind(this)
+    this.Settime=this.Settime.bind(this)
   }
 
   componentWillMount() {this.readdata()}
@@ -167,6 +175,24 @@ export default class Setalarm extends Component{
     // alert(ref[a])
   }
 
+  Turn_day(id,dayy){
+    //alert(id)
+    //alert(dayy)
+    let newlist=this.state.alarm.map(function(item){return item})
+    newlist[id][dayy]=!newlist[id][dayy]
+    this.setState({alarm:newlist})
+    this.savedata()
+  }
+
+  Settime(id,h,m){
+    //alert(h)
+    let newlist=this.state.alarm.map(function(item){return item})
+    newlist[id].hour=h
+    newlist[id].min=m
+    this.setState({alarm:newlist})
+    this.savedata()
+  }
+
   deletealarm(index){
     let newlist=this.state.alarm.map(function(item){return item})
     newlist.splice(index,1)
@@ -188,24 +214,34 @@ export default class Setalarm extends Component{
     return(
       <Swipeout right={swipeouticon} autoClose={true}>
         <View style={styles.item}>
-          <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Details',{alarm:item})}}>
+          <View>
             <View>
-              <Text style={{fontSize:40}}>{item.hour<10 ? '0'+item.hour : item.hour}{':'}{item.min<10 ? '0'+item.min : item.min}</Text>
+              <Text 
+                style={{fontSize:40}}
+                onPress={()=>{TimePickerAndroid.open({hour:item.hour,minute:item.min,is24Hour:true}).then(
+                  result =>{
+                    if(result.action === TimePickerAndroid.timeSetAction)
+                    {
+                      this.Settime(item.id,result.hour,result.minute)
+                    }
+                  }
+                )}}
+              >
+                {item.hour<10 ? '0'+item.hour : item.hour}
+                {':'}
+                {item.min<10 ? '0'+item.min : item.min}
+              </Text>
             </View>
             <View style={{flexDirection:'row'}}>
-              <Mapdays 
-                days={[
-                  {day:'Mon',value:item.Mon},
-                  {day:'Tues',value:item.Tues},
-                  {day:'Wed',value:item.Wed},
-                  {day:'Thur',value:item.Thur},
-                  {day:'Fri',value:item.Fri},
-                  {day:'Sat',value:item.Sat},
-                  {day:'Sun',value:item.Sun},
-                ]}
-              />
+              <Icont name={'numeric-1'} size={30} onPress={()=>{this.Turn_day(item.id,'Mon')}} color={item.Mon ? '#1e272e': '#b2bec3'}/>
+              <Icont name={'numeric-2'} size={30} onPress={()=>{this.Turn_day(item.id,'Tues')}} color={item.Tues ? '#1e272e': '#b2bec3'}/>
+              <Icont name={'numeric-3'} size={30} onPress={()=>{this.Turn_day(item.id,'Wed')}} color={item.Wed ? '#1e272e': '#b2bec3'}/>
+              <Icont name={'numeric-4'} size={30} onPress={()=>{this.Turn_day(item.id,'Thur')}} color={item.Thur ? '#1e272e': '#b2bec3'}/>
+              <Icont name={'numeric-5'} size={30} onPress={()=>{this.Turn_day(item.id,'Fri')}} color={item.Fri ? '#1e272e': '#b2bec3'}/>
+              <Icont name={'numeric-6'} size={30} onPress={()=>{this.Turn_day(item.id,'Sat')}} color={item.Sat ? '#1e272e': '#b2bec3'}/>
+              <Icont name={'numeric-7'} size={30} onPress={()=>{this.Turn_day(item.id,'Sun')}} color={item.Sun ? '#1e272e': '#b2bec3'}/>
             </View>
-          </TouchableOpacity>
+          </View>
           <Switch value={item.on_of} onValueChange={()=>{this.Turn_one(item.id)}} thumbColor={'white'}/>
         </View>
       </Swipeout>
@@ -273,4 +309,6 @@ const styles=StyleSheet.create({
         {"text":"Cloudy",
         "code":"4",
         "temperature":"22"},
-      "last_update":"2019-06-04T23:25:08+08:00"}]}*/
+      "last_update":"2019-06-04T23:25:08+08:00"}]}
+      onPress={()=>{this.props.navigation.navigate('Details',{alarm:item})}}
+      */
