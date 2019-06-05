@@ -1,0 +1,14 @@
+export default {
+    png0:require('./img/im/100.jpg'),
+    png1:require('./img/im/101.png'),
+    png2:require('./img/im/102.png'),
+    png3:require('./img/im/103.png'),
+    png4:require('./img/im/104.png'),
+    png5:require('./img/im/105.png'),
+    png6:require('./img/im/106.png'),
+    png7:require('./img/im/107.png'),
+    png8:require('./img/im/108.png'),
+    png9:require('./img/im/109.png'),
+    png10:require('./img/im/110.png'),
+    png11:require('./img/im/111.png'),
+}

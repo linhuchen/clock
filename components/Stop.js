@@ -3,12 +3,12 @@ import {View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
 import Stopwatch from './Stopwatch'
 
-const PlantsScreen =()=>(
+const StopwatchScreen =()=>(
   <Stopwatch/>
 )
-export default PlantsScreen
+export default StopwatchScreen
 
-PlantsScreen.navigationOptions={  
+StopwatchScreen.navigationOptions={  
   tabBarLabel:'Stopwatch',
   tabBarColor:'black',
   tabBarIcon:({tintColor,focused})=>(

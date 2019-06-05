@@ -49,7 +49,7 @@ export default class Setalarm extends Component{
   static navigationOptions={
     headerTitle:'Clock',
     headerStyle:{backgroundColor:'silver'},
-    headerTitleStyle:{textAlign:'center',flex:1,fontSize:30}
+    headerTitleStyle:{textAlign:'center',flex:1,fontSize:30},
   }
 
   constructor(props){
@@ -206,7 +206,7 @@ export default class Setalarm extends Component{
               />
             </View>
           </TouchableOpacity>
-          <Switch value={item.on_of} onValueChange={()=>{this.Turn_one(item.id)}}/>
+          <Switch value={item.on_of} onValueChange={()=>{this.Turn_one(item.id)}} thumbColor={'white'}/>
         </View>
       </Swipeout>
     )
@@ -215,6 +215,7 @@ export default class Setalarm extends Component{
   render(){
     return(
       <View style={{flex:1,backgroundColor:'silver'}}>
+        <StatusBar backgroundColor={'#d2dae2'} />
         <FlatList
           data={this.state.alarm}
           renderItem={this.rendertimer}

@@ -34,7 +34,7 @@ const RootStack = createStackNavigator(
 const AppContainerto = createAppContainer(RootStack);
 export default class ClockScreen extends Component {
   render() {
-    return <AppContainerto />;
+    return <AppContainerto/>;
   }
 }
 
