@@ -4,7 +4,8 @@ import ClockScreen from './Clock'
 import StopwatchScreen from './Stop'
 import PlantssScreen from './Plant'
 import { createAppContainer, createStackNavigator } from 'react-navigation'
-
+import {YellowBox} from 'react-native'
+YellowBox.ignoreWarnings(['Warning:'])
 
 const AppContainer = createMaterialBottomTabNavigator(
   {
