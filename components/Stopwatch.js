@@ -20,6 +20,7 @@ function Timer({ interval,style }){
     </View>
     )
 }
+//function: timer, Accept two parameters the interval and style return three text to show the time
 function RoundButton({title,color,background,onPress,disabled}){
   return(
     <TouchableOpacity 
@@ -37,13 +38,9 @@ function Buttonsrow({children}){
   return(
     <View style={styles.buttonsrow}>{children}</View>
   )
-}
+}//creat a container of two buttons
 function Lap({number,interval,fastest,slowest}){
-  const lapStyle=[
-    styles.laptext,
-    fastest && styles.fastest,
-    slowest && styles.slowest,
-  ]
+  const lapStyle=[styles.laptext,fastest && styles.fastest,slowest && styles.slowest,]
   return(
     <View style={styles.lap}>
       <Text style={lapStyle}>Lap {number}</Text>
@@ -270,3 +267,8 @@ const styles = StyleSheet.create({
     flexDirection:'row',
   }
 })
+
+
+///In this part, we borrowed some code from the open source project on github, 
+//and the first Timer, RoundButton, Lap, and LapsTable functions.
+// We learned the writing of an existing stopwatch component.

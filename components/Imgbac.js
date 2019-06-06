@@ -14,3 +14,4 @@ export default {
     png12:require('./img/im/112.png'),
     png13:require('./img/im/113.png'),
 }
+//create the function that return picture path

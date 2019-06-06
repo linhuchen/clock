@@ -2,13 +2,14 @@ import React, {Component} from 'react';
 import {View,Text,FlatList,Switch,StyleSheet,StatusBar,TimePickerAndroid,Image,Vibration} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
 import Icont from 'react-native-vector-icons/MaterialCommunityIcons'
-import Storage from 'react-native-storage'
-import AsyncStorage from '@react-native-community/async-storage'
-import Swipeout from 'react-native-swipeout'
-import ref from './Imgcom'
-import BackgroundTimer from 'react-native-background-timer';
+import Storage from 'react-native-storage'  //Components for local storage
+import AsyncStorage from '@react-native-community/async-storage'//Components for local storage
+import Swipeout from 'react-native-swipeout'  //Slide component
+import ref from './Imgcom'  //require weather image 
+import BackgroundTimer from 'react-native-background-timer';//Create background tasks' component
 
 const url='https://api.seniverse.com/v3/weather/now.json?key=SZW94eRSbE270Oca2&location=beijing&language=en&unit=c'
+//API for weather acquisition
 /*
 function Mapdays({days,onPressicon}){
   return(
@@ -58,14 +59,14 @@ export default class Setalarm extends Component{
     headerStyle:{backgroundColor:'silver'},
     headerTitleStyle:{textAlign:'center',flex:1,fontSize:30},
   }
-
+//control tabble's style (title,background color)
   constructor(props){
     super(props)
     this.state={
-      alarm:[],
-      data:[],
-      code:"",
-      tem:""
+      alarm:[],  //Store all alarm information
+      data:[],  //Information on weather conditions obtained
+      code:"", //Return code for weather conditions
+      tem:""//temperature of the weather,but we didn't use it
     }
     this.rendertimer=this.rendertimer.bind(this)
     this.Turn_one=this.Turn_one.bind(this)
@@ -74,10 +75,11 @@ export default class Setalarm extends Component{
     this.Turn_all=this.Turn_all.bind(this)
     this.Turn_day=this.Turn_day.bind(this)
     this.Settime=this.Settime.bind(this)
+    //bind function that be used in inner view
   }
 
-  componentWillMount() {this.readdata()}
-  componentDidUpdate(){this.savedata()}
+  componentWillMount() {this.readdata()}//Pre-read local data  (before render)
+  componentDidUpdate(){this.savedata()}//Save data to local file when closed
   componentDidMount(){
     fetch(url)
       .then(response=>response.json())
@@ -92,12 +94,12 @@ export default class Setalarm extends Component{
         //alert(this.state.data)
       })
       .catch(error=>alert(error))
-  }
+  }//fetch weather information from internet (after render)
 
   savedata(){
     let obj=this.state.alarm;
     AsyncStorage.setItem('alarm',JSON.stringify(obj));
-  }
+  }//function: save data to the local 
 
   readdata= async()=>{
     try{
@@ -108,7 +110,7 @@ export default class Setalarm extends Component{
     catch (error) {
       alert(error)
     }
-  }
+  }//function: read data from the local 
 
   clear() {
     AsyncStorage.clear(function(err){
@@ -117,12 +119,12 @@ export default class Setalarm extends Component{
         alert('存储的数据已清除完毕!')
       }
     })
-  }
+  }//clear data (it's dangerours!!!)
 
   Addalarm=()=>{
     let newlist=[]
     let h=new Date().getHours()
-    let m=new Date().getMinutes()
+    let m=new Date().getMinutes()-1
     if(this.state.alarm!=null)
       {newlist=this.state.alarm.map(function(item){return item})}
     let newalarm={
@@ -149,7 +151,9 @@ export default class Setalarm extends Component{
       }
     )
     this.savedata()
-  }
+  }//function: add a new alarm,first creat new array and then set the initial value on it.
+  //after set the alarm it will run timepicker to set the time user want to set
+  //the minute minus one to prevent the vibration event touch off
   
   Turn_all=()=>{
     let len=this.state.alarm.length
@@ -174,6 +178,8 @@ export default class Setalarm extends Component{
       this.savedata()
     }
   }
+  //function: turn on/off all alarm, but because the navigation's error we give up the function
+  //We saved it for the convenience of adding features later.
   
   
   Turn_one(index){
@@ -183,7 +189,7 @@ export default class Setalarm extends Component{
     this.savedata()
     // alert(ref[a])
   }
-
+  //contral the alarm on/off
   Turn_day(id,dayy){
     //alert(id)
     //alert(dayy)
@@ -192,7 +198,7 @@ export default class Setalarm extends Component{
     this.setState({alarm:newlist})
     this.savedata()
   }
-
+  //select which day the alarm will run
   Settime(id,h,m){
     //alert(h)
     let newlist=this.state.alarm.map(function(item){return item})
@@ -201,7 +207,7 @@ export default class Setalarm extends Component{
     this.setState({alarm:newlist})
     this.savedata()
   }
-
+//change one alarm's time
   deletealarm(index){
     let newlist=this.state.alarm.map(function(item){return item})
     newlist.splice(index,1)
@@ -212,7 +218,7 @@ export default class Setalarm extends Component{
     this.setState({alarm:newlist})
     this.savedata()
   }
-
+  //delete the alarm
   rendertimer({item}){
     const swipeouticon=[
       {
@@ -257,6 +263,9 @@ export default class Setalarm extends Component{
     )
   }
 
+  //the part is used to render item in flatlist.it's a slideable component,contain a time seven days icon and a switch icon
+  //the most important part of this code
+
   render(){
 
     BackgroundTimer.runBackgroundTimer(() => {
@@ -289,7 +298,9 @@ export default class Setalarm extends Component{
      
     }, 
     10000);
-    
+    //this is used to creat background task
+    //we judge the time to know whether the alarm should ring(vibration)
+    //it will carried out per 10 seconds
     BackgroundTimer.stopBackgroundTimer();
 
     return(

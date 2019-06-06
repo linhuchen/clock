@@ -40,3 +40,5 @@ export default {
     png38:require('./img/black/38.png'),
     png99:require('./img/black/99.png'),
 }
+
+//create the function that return picture path

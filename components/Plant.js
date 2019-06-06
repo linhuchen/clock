@@ -15,3 +15,6 @@ PlantssScreen.navigationOptions={
     <Icon name='tree' color={tintColor} size={focused ? 28:24}/>
   )  
 }
+
+//set the tabbar's style
+//same as clock.js

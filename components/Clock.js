@@ -30,6 +30,13 @@ const RootStack = createStackNavigator(
     initialRouteName: 'Home',
   }
 );
+//Create navigators between different screens
+
+
+//but there is some bug,we can't transmit data
+//the most important is that the component can't setState so that we can't rerender the interface 
+
+
 
 const AppContainerto = createAppContainer(RootStack);
 export default class ClockScreen extends Component {
@@ -39,8 +46,6 @@ export default class ClockScreen extends Component {
 }
 
 
-
-
 ClockScreen.navigationOptions={  
   tabBarLabel:'Clock',
   tabBarColor:'silver',
@@ -48,3 +53,5 @@ ClockScreen.navigationOptions={
     <Icon name='ios-alarm' color={tintColor} size={focused ? 28:24}/>
   )  
 }
+//set the tabbar's style
+//and the icon will become bigger when the interface is focused
