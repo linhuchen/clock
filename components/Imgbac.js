@@ -11,4 +11,6 @@ export default {
     png9:require('./img/im/109.png'),
     png10:require('./img/im/110.png'),
     png11:require('./img/im/111.png'),
+    png12:require('./img/im/112.png'),
+    png13:require('./img/im/113.png'),
 }
