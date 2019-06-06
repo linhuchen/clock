@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {View,Text,FlatList,Switch,StyleSheet,StatusBar,TimePickerAndroid,Image} from 'react-native';
+import {View,Text,FlatList,Switch,StyleSheet,StatusBar,TimePickerAndroid,Image,Vibration} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
 import Icont from 'react-native-vector-icons/MaterialCommunityIcons'
 import Storage from 'react-native-storage'
 import AsyncStorage from '@react-native-community/async-storage'
 import Swipeout from 'react-native-swipeout'
 import ref from './Imgcom'
+import BackgroundTimer from 'react-native-background-timer';
 
 const url='https://api.seniverse.com/v3/weather/now.json?key=SZW94eRSbE270Oca2&location=beijing&language=en&unit=c'
 /*
@@ -139,6 +140,14 @@ export default class Setalarm extends Component{
     }
     newlist.push(newalarm)
     this.setState({alarm:newlist})
+    TimePickerAndroid.open({hour:newalarm.hour,minute:newalarm.min,is24Hour:true}).then(
+      result =>{
+        if(result.action === TimePickerAndroid.timeSetAction)
+        {
+          this.Settime(newalarm.id,result.hour,result.minute)
+        }
+      }
+    )
     this.savedata()
   }
   
@@ -249,6 +258,40 @@ export default class Setalarm extends Component{
   }
 
   render(){
+
+    BackgroundTimer.runBackgroundTimer(() => {
+      let alr=this.state.alarm
+      let h=new Date().getHours()
+      let m=new Date().getMinutes()
+      let d=new Date().getDay()
+      let da=""
+      if(d==0)
+        da='Sun'
+      if(d==1)
+        da='Mon'
+      if(d==2)
+        da='Tues'
+      if(d==3)
+        da='Wed'
+      if(d==4)
+        da='Thur'
+      if(d==5)
+        da='Fri'
+      if(d==6)
+        da='Sat'
+      //alert(alr[0])
+      //alert(alr[0].hour)
+      for(let i=0;i<alr.length;i++)
+      {
+        if(alr[i].hour==h&&alr[i].min==m&&alr[i].on_of&&alr[i][da])
+          Vibration.vibrate([0,3000,0,3000,0,3000],false) 
+      }
+     
+    }, 
+    10000);
+    
+    BackgroundTimer.stopBackgroundTimer();
+
     return(
       <View style={{flex:1,backgroundColor:'silver'}}>
         <StatusBar backgroundColor={'#d2dae2'} />
